@@ -21,7 +21,6 @@ export default NextAuth({
       },
       from: process.env.EMAIL_FROM
     })
-    // Steam placeholder for future implementation
   ],
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,

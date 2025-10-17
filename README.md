@@ -1,19 +1,31 @@
-TGL DriverHub Login (Tailwind + NextAuth)
------------------------------------------
+TGL DriverHub — Steam login with automatic session
+-------------------------------------------------
 
-Files:
-- pages/auth/signin.js   => Animated, Tailwind-based login page using Banner.png & Logo.png
-- pages/api/auth/[...nextauth].js => NextAuth config (Discord + Email providers)
-- lib/mongodb.js => MongoDB client helper (expects MONGODB_URI)
-- public/Banner.png and public/Logo.png included
+Included files:
+- pages/auth/signin.js  => dark Tailwind login page (Discord, Steam, Email)
+- pages/api/auth/[...nextauth].js => NextAuth (Discord + Email)
+- pages/api/auth/steam/index.js => passport-steam start
+- pages/api/auth/steam/return.js => steam return, upserts user + creates NextAuth session and sets cookie, then redirects to /home
+- lib/mongodb.js => MongoDB helper
+- public/Banner.png, public/Logo.png => included if provided
+- package.json includes required dependencies
 
-Install & Run:
-1. Copy this folder into your Next.js project root (or use as a new project).
-2. Add environment variables on Vercel or .env.local:
-   - DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET
-   - NEXTAUTH_SECRET
-   - MONGODB_URI
-   - EMAIL_SERVER_HOST, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, EMAIL_SERVER_PASSWORD, EMAIL_FROM
-3. Install deps: npm install
-4. Run locally: npm run dev
-5. Deploy to Vercel and ensure NEXTAUTH_URL is set to your domain.
+Environment variables required:
+- NEXTAUTH_URL = https://transgloballogistics.uk
+- NEXTAUTH_SECRET
+- DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET
+- MONGODB_URI
+- STEAM_API_KEY
+- EMAIL_SERVER_HOST, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, EMAIL_SERVER_PASSWORD, EMAIL_FROM
+
+Notes:
+- The return route creates a session record in the 'sessions' collection and sets the 'next-auth.session-token' cookie.
+- Depending on your NextAuth adapter version, 'sessions' collection naming may differ; this implementation matches NextAuth MongoDBAdapter's sessions collection schema.
+- If you prefer a shorter session duration change the expiration calculation in return.js.
+- Deploy to Vercel; if you get install errors set Install Command to: npm install --legacy-peer-deps
+
+Deploy steps:
+1. Upload to GitHub and push to Vercel.
+2. Add the env vars in Vercel.
+3. Deploy and visit /auth/signin, click Steam to test.
+

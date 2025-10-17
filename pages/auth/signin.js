@@ -10,13 +10,13 @@ export default function SignIn({ providers }) {
         <title>Sign in — Trans Global Logistics UK</title>
       </Head>
 
-      <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{background: 'linear-gradient(180deg,#0b3c60,#07324a)'}}>
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden" style={{background: 'linear-gradient(180deg,#071226,#042033)'}}>
         <img src="/Banner.png" alt="banner" className="absolute inset-0 w-full h-full object-cover opacity-30 filter blur-md"/>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/50"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 to-black/60"></div>
 
         <motion.div initial={{opacity:0,y:40}} animate={{opacity:1,y:0}} transition={{duration:0.9}} className="relative z-20 w-full max-w-lg mx-4 p-8 rounded-2xl card-glass">
           <div className="flex flex-col items-center">
-            <img src="/Logo.png" alt="logo" className="w-40 h-40 object-contain mb-4"/>
+            <img src="/Logo.png" alt="logo" className="w-36 h-36 object-contain mb-4"/>
             <h1 className="text-2xl font-bold text-slate-900 mb-1">Trans Global Logistics UK — DriverHub</h1>
             <p className="text-sm text-slate-700 mb-6 text-center">Sign in to access driver stats, leaderboards and VTC tools.</p>
 
@@ -30,7 +30,7 @@ export default function SignIn({ providers }) {
 
             <div className="w-full my-4 text-center text-slate-600">or sign in with email</div>
 
-            <form className="w-full" onSubmit={(e)=>{e.preventDefault(); const email = e.target.email.value; if(email) signIn('email',{email,callbackUrl:'/'});}}>
+            <form className="w-full" onSubmit={(e)=>{e.preventDefault(); const email = e.target.email.value; if(email) signIn('email',{email,callbackUrl:'/home'});}}>
               <input name="email" type="email" placeholder="you@example.com" required className="w-full p-3 rounded-lg mb-3 border border-slate-200"/>
               <button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-white py-3 rounded-lg font-semibold">Send magic link</button>
             </form>
