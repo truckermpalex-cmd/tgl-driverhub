@@ -1,3 +1,4 @@
+\
 import { getProviders, signIn } from "next-auth/react";
 import Head from "next/head";
 import { motion } from "framer-motion";
@@ -6,39 +7,30 @@ import Image from "next/image";
 export default function SignIn({ providers }) {
   return (
     <>
-      <Head>
-        <title>Trans Global Logistics UK — Sign In</title>
-      </Head>
-      <div className="flex h-screen w-full items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col items-center space-y-6 rounded-2xl bg-gray-900/70 p-10 shadow-2xl backdrop-blur-md"
-        >
-          <Image
-            src="/Logo.png"
-            alt="Trans Global Logistics Logo"
-            width={120}
-            height={120}
-            className="rounded-full"
-          />
-          <h1 className="text-3xl font-bold tracking-wide">
-            Welcome to Trans Global Logistics UK
-          </h1>
-          <p className="text-gray-400">Sign in to continue to your dashboard</p>
+      <Head><title>Sign in — Trans Global Logistics UK</title></Head>
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-[#071226] to-[#042033]">
+        <Image src="/Banner.png" alt="banner" fill className="object-cover opacity-30 blur-lg" style={{zIndex:0}}/>
+        <div className="absolute inset-0 bg-black/40" />
+        <motion.div initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} transition={{duration:0.7}} className="relative z-10 w-full max-w-lg mx-4 p-8 rounded-2xl card-glass text-white">
+          <div className="flex flex-col items-center">
+            <Image src="/Logo.png" alt="logo" width={120} height={120} className="mb-4" />
+            <h1 className="text-2xl font-bold mb-1">Trans Global Logistics UK — DriverHub</h1>
+            <p className="text-sm text-gray-200 mb-6 text-center">Sign in to access driver stats, leaderboards and VTC tools.</p>
 
-          <div className="mt-6 flex flex-col gap-3 w-full">
-            {providers &&
-              Object.values(providers).map((provider) => (
-                <button
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="w-full rounded-lg bg-blue-600 px-4 py-3 font-semibold hover:bg-blue-500 transition-all"
-                >
-                  Sign in with {provider.name}
+            <div className="w-full space-y-3">
+              {providers && Object.values(providers).map((p) => (
+                <button key={p.name} onClick={() => signIn(p.id)} className={`w-full py-3 rounded-lg text-white font-semibold ${btnClass(p.name)}`}>
+                  Sign in with {p.name}
                 </button>
               ))}
+            </div>
+
+            <div className="w-full my-4 text-center text-gray-300">or sign in with email</div>
+
+            <form className="w-full" onSubmit={(e)=>{e.preventDefault(); const email = e.target.email.value; if(email) signIn('email',{email,callbackUrl:'/home'});}}>
+              <input name="email" type="email" placeholder="you@example.com" required className="w-full p-3 rounded-lg mb-3 border border-gray-700 bg-black/20" />
+              <button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-black py-3 rounded-lg font-semibold">Send magic link</button>
+            </form>
           </div>
         </motion.div>
       </div>
@@ -46,9 +38,14 @@ export default function SignIn({ providers }) {
   );
 }
 
-export async function getServerSideProps() {
+function btnClass(name){
+  const n = (name||'').toLowerCase();
+  if(n.includes('discord')) return 'bg-[#5865F2] hover:bg-[#4752c4]';
+  if(n.includes('steam')) return 'bg-[#0b2831] hover:bg-[#08161a]';
+  return 'bg-[#2563eb] hover:bg-[#1e4db7]';
+}
+
+export async function getServerSideProps(){
   const providers = await getProviders();
-  return {
-    props: { providers },
-  };
+  return { props: { providers: providers ?? {} } };
 }

@@ -1,31 +1,42 @@
-TGL DriverHub — Steam login with automatic session
--------------------------------------------------
+TGL DriverHub - Trans Global Logistics UK
+=========================================
 
-Included files:
-- pages/auth/signin.js  => dark Tailwind login page (Discord, Steam, Email)
-- pages/api/auth/[...nextauth].js => NextAuth (Discord + Email)
-- pages/api/auth/steam/index.js => passport-steam start
-- pages/api/auth/steam/return.js => steam return, upserts user + creates NextAuth session and sets cookie, then redirects to /home
-- lib/mongodb.js => MongoDB helper
-- public/Banner.png, public/Logo.png => included if provided
-- package.json includes required dependencies
+Overview
+--------
+This project is a ready-to-deploy Next.js app with authentication (Discord, Steam, Email via SendGrid),
+a blurred dark login screen, a protected /home dashboard, and a TrackSim webhook endpoint.
 
-Environment variables required:
-- NEXTAUTH_URL = https://transgloballogistics.uk
-- NEXTAUTH_SECRET
-- DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET
-- MONGODB_URI
-- STEAM_API_KEY
-- EMAIL_SERVER_HOST, EMAIL_SERVER_PORT, EMAIL_SERVER_USER, EMAIL_SERVER_PASSWORD, EMAIL_FROM
+Setup
+-----
+1. Copy the project into your GitHub repository or unzip and run locally.
+2. Install dependencies:
+   npm install
+   (If you hit peer dependency errors, run: npm install --legacy-peer-deps)
 
-Notes:
-- The return route creates a session record in the 'sessions' collection and sets the 'next-auth.session-token' cookie.
-- Depending on your NextAuth adapter version, 'sessions' collection naming may differ; this implementation matches NextAuth MongoDBAdapter's sessions collection schema.
-- If you prefer a shorter session duration change the expiration calculation in return.js.
-- Deploy to Vercel; if you get install errors set Install Command to: npm install --legacy-peer-deps
+3. Environment variables: set these in Vercel or a local .env.local (see .env.example)
+   - NEXTAUTH_URL (e.g., https://transgloballogistics.uk)
+   - NEXTAUTH_SECRET
+   - MONGODB_URI
+   - DISCORD_CLIENT_ID, DISCORD_CLIENT_SECRET
+   - STEAM_API_KEY
+   - EMAIL_SERVER_... (SendGrid settings)
 
-Deploy steps:
-1. Upload to GitHub and push to Vercel.
-2. Add the env vars in Vercel.
-3. Deploy and visit /auth/signin, click Steam to test.
+4. Deploy on Vercel and ensure NEXTAUTH_URL matches your domain.
+
+How Steam login works
+---------------------
+- The app uses passport-steam to perform OpenID login with Steam.
+- After Steam authentication the return route upserts a user and account in the MongoDB 'users' and 'accounts' collections.
+- The return route also creates a NextAuth session document and sets the 'next-auth.session-token' cookie so users are signed in and redirected to /home.
+
+TrackSim webhook
+----------------
+Endpoint: POST /api/webhooks/tracksim
+This is a stub — it logs incoming payloads. You should add verification using a shared secret.
+
+Notes & Troubleshooting
+-----------------------
+- If providers do not appear on the signin page, make sure the corresponding environment variables are present in Vercel and then redeploy.
+- For SendGrid, use username 'apikey' and your generated API key as password.
+- If you prefer not to use passport for Steam, I can convert to an openid-client based NextAuth custom provider.
 

@@ -8,13 +8,12 @@ const handler = nextConnect();
 handler.use(passport.initialize());
 
 handler.get(passport.authenticate('steam'), async (req, res) => {
-  const profile = req.user; // passport attaches steam profile here
+  const profile = req.user;
   try {
     const client = await clientPromise;
     const db = client.db();
     const users = db.collection('users');
     const accounts = db.collection('accounts');
-    // Try to find existing account
     const account = await accounts.findOne({ provider: 'steam', providerAccountId: profile.id });
     let userId;
     if (account) {
@@ -36,12 +35,10 @@ handler.get(passport.authenticate('steam'), async (req, res) => {
       });
     }
 
-    // create a session token and insert into NextAuth sessions collection
     const sessionToken = crypto.randomBytes(32).toString('hex');
-    const expires = new Date(Date.now() + 30*24*60*60*1000); // 30 days
+    const expires = new Date(Date.now() + 30*24*60*60*1000);
     await db.collection('sessions').insertOne({ sessionToken, userId, expires });
 
-    // set cookie for NextAuth session token
     const cookie = serialize('next-auth.session-token', sessionToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -51,7 +48,6 @@ handler.get(passport.authenticate('steam'), async (req, res) => {
     });
     res.setHeader('Set-Cookie', cookie);
 
-    // redirect to home
     return res.redirect(`${process.env.NEXTAUTH_URL}/home`);
   } catch (e) {
     console.error('Steam callback error', e);
