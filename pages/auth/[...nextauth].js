@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import DiscordProvider from "next-auth/providers/discord";
 import EmailProvider from "next-auth/providers/email";
-import clientPromise from "../../../lib/mongodb.js";
+import clientPromise from '@/lib/mongodb';
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 
 export default NextAuth({
@@ -25,6 +25,7 @@ export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
 });
+
 
 
 
