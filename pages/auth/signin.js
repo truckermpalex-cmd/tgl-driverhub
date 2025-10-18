@@ -1,47 +1,54 @@
 import { getProviders, signIn } from "next-auth/react";
 import Head from "next/head";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function SignIn({ providers }) {
   return (
     <>
-      <Head>
-        <title>Login | Trans Global Logistics UK</title>
-      </Head>
-      <div className="min-h-screen flex items-center justify-center bg-[url('/Banner.png')] bg-cover bg-center relative">
-        <div className="absolute inset-0 bg-black bg-opacity-70 backdrop-blur-lg"></div>
-        <motion.div
-          className="z-10 bg-gray-900/60 p-10 rounded-2xl shadow-2xl text-center max-w-md w-full"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-        >
-          <img src="/Logo.png" alt="Logo" className="mx-auto w-28 mb-6" />
-          <h1 className="text-3xl font-bold text-white mb-4">
-            Welcome to Trans Global Logistics UK
-          </h1>
-          <p className="text-gray-300 mb-8">
-            Sign in to continue to your dashboard
-          </p>
+      <Head><title>Sign in — Trans Global Logistics UK</title></Head>
+      <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-gradient-to-b from-[#071226] to-[#042033]">
+        <Image src="/Banner.png" alt="banner" fill className="object-cover opacity-30 blur-lg" style={{zIndex:0}}/>
+        <div className="absolute inset-0 bg-black/40" />
+        <motion.div initial={{opacity:0,y:30}} animate={{opacity:1,y:0}} transition={{duration:0.7}} className="relative z-10 w-full max-w-lg mx-4 p-8 rounded-2xl card-glass text-white">
+          <div className="flex flex-col items-center">
+            <Image src="/Logo.png" alt="logo" width={120} height={120} className="mb-4" />
+            <h1 className="text-2xl font-bold mb-1">Trans Global Logistics UK — DriverHub</h1>
+            <p className="text-sm text-gray-200 mb-6 text-center">Sign in to access driver stats, leaderboards and VTC tools.</p>
 
-          {providers &&
-            Object.values(providers).map((provider) => (
-              <div key={provider.name} className="mb-3">
-                <button
-                  onClick={() => signIn(provider.id)}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl w-full transition-all"
-                >
-                  Sign in with {provider.name}
+            <div className="w-full space-y-3">
+              {providers && Object.values(providers).map((p) => (
+                <button key={p.name} onClick={() => signIn(p.id)} className={`w-full py-3 rounded-lg text-white font-semibold ${btnClass(p.name)}`}>
+                  Sign in with {p.name}
                 </button>
-              </div>
-            ))}
+              ))}
+              {/* Steam custom button (uses custom route) */}
+              <button onClick={() => window.location.href='/api/auth/steam'} className="w-full py-3 rounded-lg text-white font-semibold bg-gray-800 hover:bg-gray-700">
+                Sign in with Steam
+              </button>
+            </div>
+
+            <div className="w-full my-4 text-center text-gray-300">or sign in with email</div>
+
+            <form className="w-full" onSubmit={(e)=>{e.preventDefault(); const email = e.target.email.value; if(email) signIn('email',{email,callbackUrl:'/home'});}}>
+              <input name="email" type="email" placeholder="you@example.com" required className="w-full p-3 rounded-lg mb-3 border border-gray-700 bg-black/20" />
+              <button type="submit" className="w-full bg-teal-500 hover:bg-teal-600 text-black py-3 rounded-lg font-semibold">Send magic link</button>
+            </form>
+          </div>
         </motion.div>
       </div>
     </>
   );
 }
 
-export async function getServerSideProps() {
+function btnClass(name){
+  const n = (name||'').toLowerCase();
+  if(n.includes('discord')) return 'bg-[#5865F2] hover:bg-[#4752c4]';
+  if(n.includes('steam')) return 'bg-[#0b2831] hover:bg-[#08161a]';
+  return 'bg-[#2563eb] hover:bg-[#1e4db7]';
+}
+
+export async function getServerSideProps(){
   const providers = await getProviders();
-  return { props: { providers } };
+  return { props: { providers: providers ?? {} } };
 }

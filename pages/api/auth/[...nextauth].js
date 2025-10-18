@@ -16,11 +16,11 @@ export default NextAuth({
         port: Number(process.env.EMAIL_SERVER_PORT) || 587,
         auth: {
           user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD
+          pass: process.env.EMAIL_SERVER_PASSWORD,
         },
       },
       from: process.env.EMAIL_FROM,
-    })
+    }),
   ],
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
@@ -29,6 +29,7 @@ export default NextAuth({
     async session({ session, user }){
       session.user.id = user.id
       session.user.steamid = user.steamid || null
+      session.user.isAdmin = (process.env.ADMIN_EMAILS || '').split(',').includes(user.email);
       return session
     }
   }
