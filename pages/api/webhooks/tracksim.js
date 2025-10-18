@@ -1,17 +1,3 @@
-/**
- * TrackSim webhook handler
- * Expects header: X-TrackSim-Secret: <secret>
- * Expects JSON payload describing a job. Example payload fields:
- *  - jobId, steamId, driverEmail, distance, cargo, income, status
- *
- * This handler will try to associate incoming jobs to a user:
- * 1) If steamId provided, find accounts collection where provider='steam' and providerAccountId = steamId
- * 2) If driverEmail provided, try to find user by email
- * 3) Otherwise leave driverId null
- *
- * Inserts into 'jobs' collection.
- */
-
 import clientPromise from '../../../lib/mongodb';
 
 export default async function handler(req, res) {
