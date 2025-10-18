@@ -1,5 +1,5 @@
 {
-  "name": "tgl-driverhub-final",
+  "name": "tgl-driverhub-fixed",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -21,8 +21,8 @@
     "next-connect": "0.12.2"
   },
   "devDependencies": {
-    "autoprefixer": "10.4.14",
+    "tailwindcss": "3.4.7",
     "postcss": "8.4.24",
-    "tailwindcss": "3.4.7"
+    "autoprefixer": "10.4.14"
   }
 }

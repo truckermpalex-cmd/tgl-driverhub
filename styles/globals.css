@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles for glass/blur */
 .card-glass {
   background: rgba(255,255,255,0.05);
   -webkit-backdrop-filter: blur(8px);

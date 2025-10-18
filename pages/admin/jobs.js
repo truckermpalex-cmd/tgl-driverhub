@@ -4,7 +4,7 @@ import useSWR from 'swr';
 
 const fetcher = (url)=>fetch(url).then(r=>r.json());
 
-export default function AdminJobs({session}){
+export default function AdminJobs({session}) {
   const { data } = useSWR('/api/admin/jobs', fetcher);
   const jobs = data?.jobs || [];
 
@@ -31,7 +31,7 @@ export default function AdminJobs({session}){
   );
 }
 
-export async function getServerSideProps(context){
+export async function getServerSideProps(context) {
   const session = await getSession(context);
   if (!session) {
     return { redirect: { destination: '/auth/signin', permanent: false } };

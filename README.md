@@ -1,14 +1,9 @@
-TGL DriverHub — Final Package
-=============================
+TGL DriverHub — Fixed & Ready-for-Vercel Package
 
-This final package is ready for deployment on Vercel with NextAuth (Discord, Email via SendGrid, Steam OpenID),
-MongoDB integration, TrackSim webhook verification, and admin UI.
+This package uses only relative imports and includes a cleaned signin page and robust MongoDB helper.
 
-Deployment checklist:
-1. Push the project to GitHub.
-2. In Vercel set environment variables from .env.example.
-3. Set Install Command to: npm install --legacy-peer-deps (if you see dependency errors).
-4. Deploy and test:
-   - /auth/signin shows Discord, Email, and Steam buttons
-   - /home is protected and shows latest TrackSim job for logged-in driver
-   - POST to /api/webhooks/tracksim with header X-TrackSim-Secret and JSON body to create jobs
+Deploy:
+1. Push to GitHub.
+2. Set env vars in Vercel from .env.example.
+3. If Vercel shows dependency errors, set Install Command: npm install --legacy-peer-deps
+4. Clear Vercel build cache and redeploy if necessary.
