@@ -1,4 +1,3 @@
-\
 import { getProviders, signIn } from "next-auth/react";
 import Head from "next/head";
 import { motion } from "framer-motion";
